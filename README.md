@@ -16,40 +16,6 @@
 duipai.bat
 ```
 
-## 文件结构
-
-Duipai Toolkit:.
-│  clear_testcases.py  # 清空上次对拍结果
-│  duipai.py   # 对拍主程序
-|  duipai.bat  # 快速开始
-│  README.md
-│
-├─bin
-│      brute.exe
-│      gen.exe
-│      prog.exe
-│
-├─src
-│      brute.cpp
-│      gen.cpp
-│      prog.cpp
-│
-└─testcases              # WA 的 输入与输出 内容
-    ├─test_wa_1
-    │      data.in
-    │      data.out1
-    │      data.out2
-    │
-    ├─test_wa_2
-    │      data.in
-    │      data.out1
-    │      data.out2
-    │
-    └─test_wa_3
-            data.in
-            data.out1
-            data.out2
-
 ## 使用指南
 
 1. 修改 `prog.cpp`实现你的算法

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试用例控制面板</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>测试用例分析控制面板</h1>
+        <p>实时监控对拍结果和测试状态</p>
+    </header>
+
+    <div class="dashboard">
+        <!-- 统计卡片区域 -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <h2>总测试用例</h2>
+                <p id="total-cases">0</p>
+            </div>
+            <div class="stat-card">
+                <h2>通过用例</h2>
+                <p id="passed-cases">0</p>
+            </div>
+            <div class="stat-card">
+                <h2>失败用例</h2>
+                <p id="failed-cases">0</p>
+            </div>
+        </div>
+
+        <!-- 测试用例表格 -->
+        <div class="table-container">
+            <table id="testcases-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>输入文件</th>
+                        <th>预期输出</th>
+                        <th>实际输出</th>
+                        <th>状态</th>
+                        <th>差异对比</th>  <!-- 新增差异列 -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 数据将通过JavaScript动态填充 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 {
   "summary": {
     "total": 50,
-    "passed": 43,
-    "failed": 7
+    "passed": 36,
+    "failed": 14
   },
   "testcases": [
     {
@@ -31,6 +31,34 @@
     },
     {
       "id": "test_wa_7",
+      "status": "failed"
+    },
+    {
+      "id": "test_wa_8",
+      "status": "failed"
+    },
+    {
+      "id": "test_wa_9",
+      "status": "failed"
+    },
+    {
+      "id": "test_wa_10",
+      "status": "failed"
+    },
+    {
+      "id": "test_wa_11",
+      "status": "failed"
+    },
+    {
+      "id": "test_wa_12",
+      "status": "failed"
+    },
+    {
+      "id": "test_wa_13",
+      "status": "failed"
+    },
+    {
+      "id": "test_wa_14",
       "status": "failed"
     }
   ]

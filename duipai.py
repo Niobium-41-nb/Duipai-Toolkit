@@ -3,7 +3,8 @@ import subprocess
 import sys
 import shutil
 import glob
-import json  
+import json
+import difflib  # 新增导入
 
 def compile_cpp(source, output):
     """编译C++源代码"""
@@ -69,9 +70,16 @@ def run_test(test_count=50):
                     os.makedirs(save_dir, exist_ok=True)
                     
                     # 复制测试文件（新增文件保存逻辑）
+                    # 在保存错误用例的代码块中，添加文件刷新逻辑
                     shutil.copyfile("testcases/data.in", f"{save_dir}/data.in")
-                    shutil.copyfile("testcases/data.out1", f"{save_dir}/data.out1")
+                    shutil.copyfile("testcases/data.out1", f"{save_dir}/data.out1") 
                     shutil.copyfile("testcases/data.out2", f"{save_dir}/data.out2")
+                    
+                    # 添加文件同步刷新
+                    for f in ['data.in', 'data.out1', 'data.out2']:
+                        with open(f"{save_dir}/{f}", 'a') as file:
+                            file.flush()
+                            os.fsync(file.fileno())
                     
                     # 保留原有错误信息输出
                     print("===== 发现错误测试用例 =====")
@@ -87,6 +95,12 @@ def run_test(test_count=50):
                         print(f.read())
                     # input("按Enter键退出...")
                     # break
+                    
+                    # 生成差异对比HTML
+                    differ = difflib.HtmlDiff()
+                    diff_content = differ.make_file(out1, out2, "程序输出", "暴力解输出")
+                    with open(f"{save_dir}/diff.html", "w", encoding="utf-8") as f:
+                        f.write(diff_content)
                 else:
                     print("AC")
                     success_count += 1
@@ -99,24 +113,31 @@ def run_test(test_count=50):
         os.remove("testcases/data.out1")
         os.remove("testcases/data.out2")
     
-        # 最终报告生成（确保在函数作用域内）
+        # 错误：在每次循环中都生成报告
+        # 将报告生成移到循环外（约第116行）
+        # 删除循环内的report生成代码
+        
+        # 最终报告生成（正确位置）
         report = {
+
             "summary": {
                 "total": test_count,
                 "passed": test_count - wa_count,
                 "failed": wa_count
             },
             "testcases": [
+
                 {
-                    "id": f"test_wa_{i}",
+                    "id": f"test_wa_{index}",  # 使用独立索引
                     "status": "failed"
-                } for i in range(1, wa_count + 1)
+                } for index in range(1, wa_count + 1)
             ]
         }
         
         with open("testcases/report.json", "w") as f:
-            json.dump(report, f, ensure_ascii=False, indent=2)  # 正确缩进层级
-        
+
+            json.dump(report, f, ensure_ascii=False, indent=2)
+
         # 最终输出添加错误用例统计
     print("\n===== 测试结束 =====")
     print(f"总测试次数: {test_count}")

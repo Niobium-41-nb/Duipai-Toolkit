@@ -7,7 +7,7 @@ if os.path.exists("testcases"):
     for dir in glob.glob("testcases/test_wa_*"):
         shutil.rmtree(dir)
     # 清理可能残留的临时文件
-    for file in ["data.in", "data.out1", "data.out2"]:
+    for file in ["data.in", "data.out1", "data.out2",'report.json']:
         file_path = os.path.join("testcases", file)
         if os.path.exists(file_path):
             os.remove(file_path)

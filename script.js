@@ -4,6 +4,68 @@ document.addEventListener('DOMContentLoaded', function() {
     const failedCasesElement = document.getElementById('failed-cases');
     const tableBody = document.querySelector('#testcases-table tbody');
     
+    // 创建输入内容弹窗容器（只创建一次）
+    let inputViewer = document.createElement('div');
+    inputViewer.id = 'input-viewer';
+    inputViewer.style.cssText = `
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.35);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    `;
+    document.body.appendChild(inputViewer);
+
+    // 弹窗内容区
+    let inputContentBox = document.createElement('div');
+    inputContentBox.style.cssText = `
+        background: #fff;
+        border-radius: 8px;
+        max-width: 90vw;
+        max-height: 80vh;
+        min-width: 320px;
+        padding: 24px 20px 16px 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        position: relative;
+        overflow: auto;
+        font-family: monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+    `;
+    inputViewer.appendChild(inputContentBox);
+
+    // 关闭按钮
+    let inputCloseBtn = document.createElement('button');
+    inputCloseBtn.innerHTML = '&times;';
+    inputCloseBtn.style.cssText = `
+        position: absolute;
+        top: 10px; right: 16px;
+        background: #e74c3c;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.2rem;
+        padding: 4px 12px;
+        cursor: pointer;
+    `;
+    inputCloseBtn.onclick = closeInputViewer;
+    inputContentBox.appendChild(inputCloseBtn);
+
+    // 关闭弹窗函数
+    function closeInputViewer() {
+        inputViewer.style.display = 'none';
+        inputContentBox.querySelector('pre')?.remove();
+    }
+
+    // 支持Esc关闭
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && inputViewer.style.display === 'flex') {
+            closeInputViewer();
+        }
+    });
+
     // 从服务器加载测试报告数据
     // 修改fetch路径为相对路径
     fetch('./testcases/report.json')  // 添加当前目录标识符
@@ -31,12 +93,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 idCell.textContent = testcase.id;
                 row.appendChild(idCell);
                 
-                // 输入数据（修复链接生成逻辑）
+                // 输入数据（弹窗显示内容）
                 const inputCell = document.createElement('td');
                 const inputLink = document.createElement('a');
-                inputLink.href = `./testcases/${testcase.id}/data.in`;
+                inputLink.href = `#`;
                 inputLink.textContent = '查看输入';
-                inputLink.target = '_blank';
+                inputLink.style.cursor = 'pointer';
+                inputLink.onclick = (e) => {
+                    e.preventDefault();
+                    fetch(`./testcases/${testcase.id}/data.in`)
+                        .then(r => r.text())
+                        .then(text => {
+                            inputContentBox.querySelector('pre')?.remove();
+                            const pre = document.createElement('pre');
+                            pre.textContent = text;
+                            inputContentBox.appendChild(pre);
+                            inputViewer.style.display = 'flex';
+                        })
+                        .catch(() => {
+                            inputContentBox.querySelector('pre')?.remove();
+                            const pre = document.createElement('pre');
+                            pre.textContent = '无法加载输入文件';
+                            inputContentBox.appendChild(pre);
+                            inputViewer.style.display = 'flex';
+                        });
+                };
                 inputCell.appendChild(inputLink);
                 row.appendChild(inputCell);
                 

@@ -99,6 +99,50 @@ def run_test(test_count=50):
                     # 生成差异对比HTML
                     differ = difflib.HtmlDiff()
                     diff_content = differ.make_file(out1, out2, "程序输出", "暴力解输出")
+
+                    # 新增：读取输入内容并插入到diff.html顶部
+                    with open(f"{save_dir}/data.in", "r", encoding="utf-8") as fin:
+                        input_data = fin.read()
+
+                    # 构造带输入内容的HTML
+                    input_html = (
+                        '<div style="background:#f8f9fa;padding:12px 18px;margin-bottom:18px;border-radius:6px;">'
+                        '<h3 style="margin-top:0;">输入文件 data.in</h3>'
+                        f'<pre style="background:#f4f4f4;padding:10px;border-radius:4px;overflow:auto;">{input_data}</pre>'
+                        '</div>'
+                    )
+
+                    # 将输入内容插入到<body>后
+                    diff_content = diff_content.replace(
+                        "<body>",
+                        "<body>" + input_html,
+                        1
+                    )
+
+                    # 在</body>前插入作者信息
+                    author_html = '<div style="text-align:left;color:#888;font-size:14px;margin-top:32px;">作者：vanadium-23 (codeforces)</div>'
+                    diff_content = diff_content.replace(
+                        "</body>",
+                        author_html + "\n</body>",
+                        1
+                    )
+
+                    # author_html = '<div style="text-align:left;color:#888;font-size:14px;margin-top:32px;">作者：Niobium-41-nb (GitHub)</div>'
+                    # diff_content = diff_content.replace(
+                    #     "</body>",
+                    #     author_html + "\n</body>",
+                    #     1
+                    # )
+
+                    author_html = (
+                        '<div style="text-align:right;margin-top:8px;"><img src="img\author.jpg" alt="author" style="height:40px;border-radius:8px;box-shadow:0 2px 8px #ccc;"></div>'
+                    )
+                    diff_content = diff_content.replace(
+                        "</body>",
+                        author_html + "\n</body>",
+                        1
+                    )
+
                     with open(f"{save_dir}/diff.html", "w", encoding="utf-8") as f:
                         f.write(diff_content)
                 else:
@@ -145,4 +189,4 @@ def run_test(test_count=50):
     print(f"发现错误用例: {wa_count} 个（已保存到 testcases/test_wa_* 目录）")
 
 if __name__ == "__main__":  # 此语句应该在函数外，无缩进
-    run_test()
+    run_test(50)

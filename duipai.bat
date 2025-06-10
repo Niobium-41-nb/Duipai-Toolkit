@@ -5,9 +5,9 @@ setlocal enabledelayedexpansion
 if not exist "testcases" mkdir testcases
 
 :: 编译程序
-g++ -std=c++17 -O2 -o src/prog.exe prog.cpp
-g++ -std=c++17 -O2 -o src/brute.exe brute.cpp
-g++ -std=c++17 -O2 -o src/gen.exe gen.cpp
+g++ -std=c++17 -O2 -o bin/prog.exe src/prog.cpp
+g++ -std=c++17 -O2 -o bin/brute.exe src/brute.cpp
+g++ -std=c++17 -O2 -o bin/gen.exe src/gen.cpp
 
 :: 设置测试次数
 set test_count=50
@@ -48,7 +48,7 @@ for /l %%i in (1, 1, %test_count%) do (
         copy testcases\data.out2 "!wa_dir!" > nul
         
         echo ===== found wrong test =====
-        echo 错误用例已保存到: !wa_dir!
+        echo wa_test_save_in: !wa_dir!
     )
     
     :: 清理临时文件

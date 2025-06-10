@@ -19,6 +19,7 @@
 duipai.bat
 ```
 
+<<<<<<< HEAD
 ## 文件结构
 ```
 Duipai Toolkit:.
@@ -56,6 +57,8 @@ Duipai Toolkit:.
             data.out2
 ```
 
+=======
+>>>>>>> 8a06c743337c624e4d910ca9e0ba4ec69658829f
 ## 使用指南
 ### 编译说明
 ```bash

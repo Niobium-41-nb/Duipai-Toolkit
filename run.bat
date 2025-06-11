@@ -1,5 +1,8 @@
 echo off
 
+if not exist "testcases" mkdir testcases
+if not exist "bin" mkdir bin
+
 python clear_testcases.py
 
 g++ -std=c++17 -O2 -o bin/prog.exe src/prog.cpp

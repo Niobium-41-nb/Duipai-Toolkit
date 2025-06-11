@@ -3,6 +3,7 @@ setlocal enabledelayedexpansion
 
 :: 创建测试目录
 if not exist "testcases" mkdir testcases
+if not exist "bin" mkdir bin
 
 :: 编译程序
 g++ -std=c++17 -O2 -o bin/prog.exe src/prog.cpp

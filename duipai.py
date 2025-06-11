@@ -188,5 +188,11 @@ def run_test(test_count=50):
     print(f"通过次数: {test_count - wa_count}")
     print(f"发现错误用例: {wa_count} 个（已保存到 testcases/test_wa_* 目录）")
 
-if __name__ == "__main__":  # 此语句应该在函数外，无缩进
+if __name__ == "__main__":
+    # 创建必要目录
+    if not os.path.exists("testcases"):
+        os.makedirs("testcases", exist_ok=True)
+    if not os.path.exists("bin"):
+        os.makedirs("bin", exist_ok=True)
+
     run_test()

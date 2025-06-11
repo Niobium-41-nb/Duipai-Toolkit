@@ -62,4 +62,5 @@ echo ===== End =====
 echo all_test_times: %test_count%
 echo AC_test_times: %success_count%
 echo WA_test_times: %wa_count% (save in testcases\test_wa_*)
+
 pause

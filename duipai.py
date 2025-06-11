@@ -148,45 +148,45 @@ def run_test(test_count=50):
                 else:
                     print("AC")
                     success_count += 1
-        except FileNotFoundError:  # 修复第93行错误：添加冒号并正确缩进
+        except FileNotFoundError:
             print("错误：输出文件未生成")
             sys.exit(1)
-        
+
         # 清理临时文件（保持不变）
-        os.remove("testcases/data.in")
-        os.remove("testcases/data.out1")
-        os.remove("testcases/data.out2")
-    
-        # 错误：在每次循环中都生成报告
-        # 将报告生成移到循环外（约第116行）
-        # 删除循环内的report生成代码
-        
-        # 最终报告生成（正确位置）
-        report = {
+        # os.remove("testcases/data.in")
+        # os.remove("testcases/data.out1")
+        # os.remove("testcases/data.out2")
 
-            "summary": {
-                "total": test_count,
-                "passed": test_count - wa_count,
-                "failed": wa_count
-            },
-            "testcases": [
+    # 循环外统一清理，防止文件占用
+    for tmp_file in ["testcases/data.in", "testcases/data.out1", "testcases/data.out2"]:
+        if os.path.exists(tmp_file):
+            try:
+                os.remove(tmp_file)
+            except PermissionError:
+                print(f"Warning: Could not remove {tmp_file}, file is in use.")
 
-                {
-                    "id": f"test_wa_{index}",  # 使用独立索引
-                    "status": "failed"
-                } for index in range(1, wa_count + 1)
-            ]
-        }
-        
-        with open("testcases/report.json", "w") as f:
+    # 最终报告生成（正确位置）
+    report = {
+        "summary": {
+            "total": test_count,
+            "passed": test_count - wa_count,
+            "failed": wa_count
+        },
+        "testcases": [
+            {
+                "id": f"test_wa_{index}",
+                "status": "failed"
+            } for index in range(1, wa_count + 1)
+        ]
+    }
 
-            json.dump(report, f, ensure_ascii=False, indent=2)
+    with open("testcases/report.json", "w") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
 
-        # 最终输出添加错误用例统计
     print("\n===== 测试结束 =====")
     print(f"总测试次数: {test_count}")
     print(f"通过次数: {test_count - wa_count}")
     print(f"发现错误用例: {wa_count} 个（已保存到 testcases/test_wa_* 目录）")
 
 if __name__ == "__main__":  # 此语句应该在函数外，无缩进
-    run_test(50)
+    run_test()

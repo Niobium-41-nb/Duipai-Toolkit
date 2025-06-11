@@ -127,21 +127,21 @@ def run_test(test_count=50):
                         1
                     )
 
-                    # author_html = '<div style="text-align:left;color:#888;font-size:14px;margin-top:32px;">作者：Niobium-41-nb (GitHub)</div>'
-                    # diff_content = diff_content.replace(
-                    #     "</body>",
-                    #     author_html + "\n</body>",
-                    #     1
-                    # )
-
-                    author_html = (
-                        '<div style="text-align:right;margin-top:8px;"><img src="img\author.jpg" alt="author" style="height:40px;border-radius:8px;box-shadow:0 2px 8px #ccc;"></div>'
-                    )
+                    author_html = '<div style="text-align:left;color:#888;font-size:14px;margin-top:32px;">作者：Niobium-41-nb (GitHub)</div>'
                     diff_content = diff_content.replace(
                         "</body>",
                         author_html + "\n</body>",
                         1
                     )
+
+                    # author_html = (
+                    #     '<div style="text-align:left;margin-top:8px;"><img src="https://c-ssl.duitang.com/uploads/blog/202306/12/bYS2NqJlTLvXBbn.gif" alt="author" style="height:40px;border-radius:8px;box-shadow:0 2px 8px #ccc;"></div>'
+                    # )
+                    # diff_content = diff_content.replace(
+                    #     "</body>",
+                    #     author_html + "\n</body>",
+                    #     1
+                    # )
 
                     with open(f"{save_dir}/diff.html", "w", encoding="utf-8") as f:
                         f.write(diff_content)

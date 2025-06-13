@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- 修复1 -->
+    <title>在线代码编辑器</title>
+    <link rel="stylesheet" href="editor.css"><!-- 建议将样式移到此文件 -->
+    <style>
+        body {
+            margin: 0;
+        }
+        #editor {
+            height: 80vh;
+        }
+    </style>
+</head>
+<body>
+    <label for="file-select">选择文件：</label><!-- 修复2 -->
+    <select id="file-select" title="选择要编辑的文件">
+        <option value="prog.cpp">prog.cpp</option>
+        <option value="brute.cpp">brute.cpp</option>
+        <option value="gen.cpp">gen.cpp</option>
+    </select>
+    <button onclick="saveFile()">保存</button>
+    <button onclick="runTest()">运行对拍</button>
+    <div id="editor"></div>
+    <pre id="output"></pre>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+    <script>
+        let editor, currentFile = "prog.cpp";
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' }});
+        require(['vs/editor/editor.main'], function () {
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '',
+                language: 'cpp',
+                theme: 'vs-dark'
+            });
+            loadFile(currentFile);
+        });
+        document.getElementById('file-select').onchange = function() {
+            currentFile = this.value;
+            loadFile(currentFile);
+        };
+        function loadFile(filename) {
+            fetch(`/api/src/${filename}`).then(r=>r.text()).then(code=>{
+                editor.setValue(code);
+            });
+        }
+        function saveFile() {
+            fetch(`/api/src/${currentFile}`, {
+                method: 'POST',
+                headers: {'Content-Type':'text/plain'},
+                body: editor.getValue()
+            }).then(r=>r.text()).then(msg=>{
+                alert(msg);
+            });
+        }
+        function runTest() {
+            document.getElementById('output').textContent = '正在运行...';
+            fetch('/api/run', {method:'POST'}).then(r=>r.text()).then(res=>{
+                document.getElementById('output').textContent = res;
+            });
+        }
+    </script>
+</body>
+</html>

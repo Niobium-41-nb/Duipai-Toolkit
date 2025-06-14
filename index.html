@@ -13,6 +13,23 @@
     </header>
 
     <div class="dashboard">
+        <!-- 文件编辑器区域 -->
+        <div class="editor-container">
+            <h2>源代码编辑器</h2>
+            <div class="file-selector">
+                <label for="file-select">选择文件:</label>
+                <select id="file-select">
+                    <option value="brute.cpp">brute.cpp</option>
+                    <option value="gen.cpp">gen.cpp</option>
+                    <option value="prog.cpp">prog.cpp</option>
+                </select>
+                <button id="load-btn">加载</button>
+                <button id="save-btn">保存</button>
+            </div>
+            <textarea id="code-editor" spellcheck="false"></textarea>
+            <div id="editor-status"></div>
+        </div>
+        
         <!-- 统计卡片区域 -->
         <div class="stats-container">
             <div class="stat-card">

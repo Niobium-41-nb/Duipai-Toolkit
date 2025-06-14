@@ -1,0 +1,160 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+body {
+  background: linear-gradient(120deg, #e0e7ff 0%, #f6f8fa 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Arial', sans-serif;
+  color: #111;
+}
+
+.container {
+  max-width: 760px;
+  margin: 48px auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px #0002;
+  padding: 36px 28px 28px 28px;
+  transition: box-shadow 0.2s;
+}
+.container:hover {
+  box-shadow: 0 10px 40px #1677ff22;
+}
+
+h1 {
+  color: #1677ff;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
+  font-size: 2.2rem;
+}
+
+.upload-section, .editor-section {
+  margin-bottom: 32px;
+  text-align: left;
+}
+.upload-section label, .editor-section b {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 500;
+  color: #222;
+}
+.upload-section input[type="file"] {
+  margin-left: 8px;
+}
+.upload-section select {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #d0d7de;
+  background: #f6f8fa;
+}
+.upload-section button {
+  margin-top: 12px;
+  padding: 10px 32px;
+  background: linear-gradient(90deg, #1677ff 60%, #69b1ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #1677ff22;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.upload-section button:disabled {
+  background: #b3d1ff;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.error {
+  color: #e74c3c;
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.result-section {
+  margin-top: 36px;
+}
+.result-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  background: #fafbfc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px #1677ff11;
+}
+.result-section th, .result-section td {
+  border: 1px solid #e0e0e0;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 15px;
+  color: #111;
+}
+.result-section th {
+  background: #f0f4ff;
+  color: #1677ff;
+  font-size: 16px;
+}
+.result-section tr {
+  transition: background 0.2s;
+}
+.result-section tr:hover {
+  background: #e6f7ff;
+}
+.result-section pre {
+  margin: 0;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  font-size: 14px;
+  background: none;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+/* Monaco Editor 优化 */
+.editor-section .monaco-editor, .editor-section .monaco-editor-background {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px #1677ff11;
+}
+.editor-section {
+  margin-bottom: 24px;
+}

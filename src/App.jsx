@@ -1,3 +1,4 @@
+import About from './About.jsx';
 import { useState, useEffect } from 'react'
 import MonacoEditor from '@monaco-editor/react'
 import './App.css'
@@ -29,6 +30,7 @@ function App() {
   // 对拍轮数
   const [rounds, setRounds] = useState(10);
   const [showOnlyDiff, setShowOnlyDiff] = useState(false); // 只显示不一致
+  const [page, setPage] = useState('main');
 
   // 悬停时动态加载对应 cpp 文件内容
   useEffect(() => {
@@ -114,8 +116,17 @@ function App() {
     setLoading(false);
   };
 
+  if (page === 'about') {
+    return (
+      <div>
+        <button style={{ position: 'absolute', left: 24, top: 24 }} onClick={() => setPage('main')}>← 返回首页</button>
+        <About />
+      </div>
+    );
+  }
+
   return (
-    <div className="container"style={{ width: 500}}>
+    <div className="container" style={{ width: 500 }}>
       <h1>算法竞赛对拍工具</h1>
       <div style={{ textAlign: 'right', marginBottom: 8 }}>
         <label>
@@ -210,6 +221,9 @@ function App() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div style={{ marginTop: 32, textAlign: 'center' }}>
+        <button onClick={() => setPage('about')} style={{ fontSize: 15 }}>关于我们</button>
       </div>
     </div>
   );

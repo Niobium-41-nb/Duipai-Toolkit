@@ -87,6 +87,8 @@ h1 {
   border-radius: 4px;
   border: 1px solid #d0d7de;
   background: #f6f8fa;
+  color: #1677ff; /* 新增：设置预设下拉框文字颜色为主题蓝色 */
+  font-weight: 600; /* 新增：加粗 */
 }
 .upload-section button {
   margin-top: 12px;

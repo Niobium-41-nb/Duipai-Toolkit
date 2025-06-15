@@ -30,13 +30,17 @@ app.post('/api/upload', (req, res) => {
   if (req.files.gen) {
     req.files.gen.mv(path.join(uploadDir, 'gen.cpp'));
   } else if (req.body.preset) {
-    // 写入预设生成器代码
-    let presetCode = '';
-    if (req.body.preset === 'random-int') {
-      presetCode = `#include <iostream>\n#include <cstdlib>\nusing namespace std;\nint main() {\n  int n = rand() % 10 + 1;\n  for (int i = 0; i < n; ++i) cout << (rand()%100) << ' ';\n  cout << endl;\n}`;
-    } else if (req.body.preset === 'permutation') {
-      presetCode = `#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\nint main() {\n  int n = 5;\n  vector<int> a(n);\n  for(int i=0;i<n;++i)a[i]=i+1;\n  random_shuffle(a.begin(),a.end());\n  for(int x:a)cout<<x<<' ';\n  cout<<endl;\n}`;
+    // 读取 presets 目录下的 cpp 文件作为预设生成器代码
+    const presetFileMap = {
+      'random-int': path.join(__dirname, '../presets/random-int.cpp'),
+      'permutation': path.join(__dirname, '../presets/permutation.cpp'),
+      'multi-random-array': path.join(__dirname, '../presets/multi-random-array.cpp'),
+    };
+    const presetPath = presetFileMap[req.body.preset];
+    if (!presetPath || !fs.existsSync(presetPath)) {
+      return res.status(400).json({ error: '预设生成器不存在' });
     }
+    const presetCode = fs.readFileSync(presetPath, 'utf-8');
     fs.writeFileSync(path.join(uploadDir, 'gen.cpp'), presetCode);
   } else {
     return res.status(400).json({ error: '请上传 gen.cpp 或选择预设' });
@@ -47,7 +51,10 @@ app.post('/api/upload', (req, res) => {
 // 对拍接口：编译并运行多组数据
 app.post('/api/duipai', async (req, res) => {
   const uploadDir = path.join(__dirname, 'uploads');
-  const rounds = 10; // 对拍轮数
+  let rounds = 10;
+  if (req.body && req.body.rounds) {
+    rounds = Math.max(1, Math.min(100, parseInt(req.body.rounds)));
+  }
   const timeout = 2000; // ms
   // 编译
   function compile(src, out) {

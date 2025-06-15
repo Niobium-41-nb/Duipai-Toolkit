@@ -87,7 +87,7 @@ function App() {
   };
 
   return (
-    <div className="container">
+    <div className="container"style={{ width: 500}}>
       <h1>算法竞赛对拍工具</h1>
       <div style={{ textAlign: 'right', marginBottom: 8 }}>
         <label>

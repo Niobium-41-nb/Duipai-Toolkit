@@ -54,7 +54,7 @@ body {
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 6px 32px #0002;
-  padding: 36px 28px 28px 28px;
+  padding: 36px 100px 28px 100px;
   transition: box-shadow 0.2s;
 }
 .container:hover {

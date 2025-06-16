@@ -1,20 +1,65 @@
 #include <bits/stdc++.h>
-#define int long long 
+#define int long long
 using namespace std;
 
 void solve(){
-    int w,h,a,b;
-    cin >> w >> h >> a >> b;
-    int x1,y1,x2,y2;
-    cin >> x1 >> y1 >> x2 >> y2;
-    int mina = abs(x1-x2)-a;
-    int minb = abs(y1-y2)-b;
-    if(mina % a == 0 && mina >= 0 || minb % b ==0 && minb >= 0){
-        cout << "Yes\n";
-    }else{
-        cout << "No\n";
+    int n;
+    cin >> n;
+    vector<int>arr(n+1,0);
+    for(int i = 1;i <= n;i++){
+        cin >> arr[i];
     }
-    
+    vector<set<int>>nums;
+    vector<map<int,int>>times;
+    set<int>st;
+    map<int,int>mp;
+    for(int i = n;i >= 1;i--){
+        int num = arr[i];
+        if(st.empty()){
+            st.insert(num);
+            mp[num]=1;
+        }else{
+            if(st.find(num)!=st.end()){
+                nums.push_back(st);
+                times.push_back(mp);
+                st.clear(),mp.clear();
+                st.insert(num);
+                mp[num]=1;
+            }else{
+                st.insert(num);
+                mp[num]=1;
+            }
+        }
+    }
+    if(!st.empty()){
+        nums.push_back(st);
+        times.push_back(mp);
+    }
+    // for(int i = 0;i < nums.size();i++){
+    //     for(int j : nums[i]){
+    //         cout << j << ' ';
+    //     }
+    //     cout << '\n';
+    // }
+    int cnt = 1;
+    if(nums.size() == 1){
+        cout << 1 << '\n';
+        return;
+    }
+    for(int i = nums.size()-1;i > 0;i--){
+        bool can = true;
+        for(int j : nums[i]){
+            if(nums[i-1].find(j) == nums[i-1].end()){
+                can = false;
+            }
+        }
+        if(can == false){
+            break;
+        }
+        cnt++;
+    }
+
+    cout << cnt << '\n';
 }
 
 signed main(){
@@ -25,5 +70,4 @@ signed main(){
     while(t--){
         solve();
     }
-    return 0;
 }

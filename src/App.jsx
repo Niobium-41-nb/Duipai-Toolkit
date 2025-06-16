@@ -147,15 +147,39 @@ function App() {
         <div className="editor-section">
           <div style={{ marginBottom: 16 }}>
             <b>暴力解 brute.cpp</b>
-            <MonacoEditor height="120px" defaultLanguage="cpp" value={editor.brute} onChange={v => handleEditorChange(v, 'brute')} options={{ fontSize: 14 }} />
+            <MonacoEditor
+              height="180px"
+              defaultLanguage="cpp"
+              theme="vs-dark"
+              value={editor.brute || ''}
+              onChange={v => handleEditorChange(v, 'brute')}
+              options={{ fontSize: 15, minimap: { enabled: false }, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on', placeholder: '// 在此输入暴力解 C++ 代码' }}
+              className="monaco-border"
+            />
           </div>
           <div style={{ marginBottom: 16 }}>
             <b>测试解 prog.cpp</b>
-            <MonacoEditor height="120px" defaultLanguage="cpp" value={editor.prog} onChange={v => handleEditorChange(v, 'prog')} options={{ fontSize: 14 }} />
+            <MonacoEditor
+              height="180px"
+              defaultLanguage="cpp"
+              theme="vs-dark"
+              value={editor.prog || ''}
+              onChange={v => handleEditorChange(v, 'prog')}
+              options={{ fontSize: 15, minimap: { enabled: false }, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on', placeholder: '// 在此输入测试解 C++ 代码' }}
+              className="monaco-border"
+            />
           </div>
           <div style={{ marginBottom: 16 }}>
             <b>数据生成 gen.cpp</b>
-            <MonacoEditor height="120px" defaultLanguage="cpp" value={editor.gen} onChange={v => handleEditorChange(v, 'gen')} options={{ fontSize: 14 }} />
+            <MonacoEditor
+              height="180px"
+              defaultLanguage="cpp"
+              theme="vs-dark"
+              value={editor.gen || ''}
+              onChange={v => handleEditorChange(v, 'gen')}
+              options={{ fontSize: 15, minimap: { enabled: false }, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on', placeholder: '// 在此输入数据生成器 C++ 代码' }}
+              className="monaco-border"
+            />
           </div>
         </div>
       ) : (

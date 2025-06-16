@@ -155,6 +155,7 @@ function App() {
               onChange={v => handleEditorChange(v, 'brute')}
               options={{ fontSize: 15, minimap: { enabled: false }, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on', placeholder: '// 在此输入暴力解 C++ 代码' }}
               className="monaco-border"
+              loading={<CustomMonacoLoading />}
             />
           </div>
           <div style={{ marginBottom: 16 }}>
@@ -167,6 +168,7 @@ function App() {
               onChange={v => handleEditorChange(v, 'prog')}
               options={{ fontSize: 15, minimap: { enabled: false }, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on', placeholder: '// 在此输入测试解 C++ 代码' }}
               className="monaco-border"
+              loading={<CustomMonacoLoading />}
             />
           </div>
           <div style={{ marginBottom: 16 }}>
@@ -179,6 +181,7 @@ function App() {
               onChange={v => handleEditorChange(v, 'gen')}
               options={{ fontSize: 15, minimap: { enabled: false }, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on', placeholder: '// 在此输入数据生成器 C++ 代码' }}
               className="monaco-border"
+              loading={<CustomMonacoLoading />}
             />
           </div>
         </div>
@@ -260,6 +263,21 @@ function App() {
         <button onClick={() => setPage('about')} style={{ fontSize: 15, marginRight: 16 }}>关于我们</button>
         <button onClick={() => setPage('donate')} style={{ fontSize: 15 }}>投喂</button>
       </div>
+    </div>
+  );
+}
+
+function CustomMonacoLoading() {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#1677ff', fontSize: 18, background: 'transparent', borderRadius: 8
+    }}>
+      <svg width="40" height="40" viewBox="0 0 40 40" style={{ marginBottom: 10 }}>
+        <circle cx="20" cy="20" r="16" stroke="#1677ff" strokeWidth="4" fill="none" strokeDasharray="80" strokeDashoffset="60">
+          <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+      Monaco 编辑器加载中...
     </div>
   );
 }

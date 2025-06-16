@@ -1,4 +1,5 @@
 import About from './About.jsx';
+import Donate from './Donate.jsx';
 import { useState, useEffect } from 'react'
 import MonacoEditor from '@monaco-editor/react'
 import './App.css'
@@ -124,6 +125,14 @@ function App() {
       </div>
     );
   }
+  if (page === 'donate') {
+    return (
+      <div>
+        <button style={{ position: 'absolute', left: 24, top: 24 }} onClick={() => setPage('main')}>← 返回首页</button>
+        <Donate />
+      </div>
+    );
+  }
 
   return (
     <div className="container" style={{ width: 500 }}>
@@ -223,7 +232,8 @@ function App() {
         </table>
       </div>
       <div style={{ marginTop: 32, textAlign: 'center' }}>
-        <button onClick={() => setPage('about')} style={{ fontSize: 15 }}>关于我们</button>
+        <button onClick={() => setPage('about')} style={{ fontSize: 15, marginRight: 16 }}>关于我们</button>
+        <button onClick={() => setPage('donate')} style={{ fontSize: 15 }}>投喂</button>
       </div>
     </div>
   );

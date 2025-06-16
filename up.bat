@@ -1,1 +1,1 @@
-git add . && git commit -m "chore: 优化批处理自动关闭隐藏窗口等细节" && git push origin main
+git add . && git commit -m "chore: update" && git push origin main

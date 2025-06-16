@@ -8,7 +8,7 @@ export default function Donate() {
       <div style={{ textAlign: 'left', fontSize: 17, lineHeight: 1.8 }}>
         如果你觉得本工具对你有帮助，欢迎自愿投喂作者一杯奶茶 ☕ 或一份小小的支持！
         <br /><br />
-        <b>微信/支付宝收款码：</b>
+        <b>微信收款码：</b>
         <br />
         <img src="/my-donate.jpg" alt="捐赠二维码" style={{ width: 180, marginTop: 12, borderRadius: 12, boxShadow: '0 2px 8px #1677ff22' }} />
         <br /><br />

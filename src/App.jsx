@@ -136,6 +136,7 @@ function App() {
 
   return (
     <div className="container" style={{ width: 500 }}>
+      <img src="/author.jpg" alt="项目Logo" style={{ width: 80, height: 80, borderRadius: '50%', margin: '0 auto 18px auto', display: 'block', boxShadow: '0 2px 8px #1677ff22' }} />
       <h1>算法竞赛对拍工具</h1>
       <div style={{ textAlign: 'right', marginBottom: 8 }}>
         <label>

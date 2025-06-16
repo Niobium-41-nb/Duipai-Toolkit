@@ -121,6 +121,26 @@ app.post('/api/duipai', async (req, res) => {
   res.json({ status: 'success', results });
 });
 
+const isProd = process.env.NODE_ENV === 'production' || process.env.STATIC_SERVE === '1';
+if (isProd) {
+  const distPath = path.join(__dirname, '../dist');
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api/')) return next();
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+    console.log('Serving static front-end from dist/');
+  } else {
+    console.warn('dist/ directory not found, static front-end not served.');
+  }
+}
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  if (isProd) {
+    console.log('Production mode: static front-end enabled.');
+  } else {
+    console.log('Development mode: please run "npm run dev" in project root for front-end.');
+  }
 });

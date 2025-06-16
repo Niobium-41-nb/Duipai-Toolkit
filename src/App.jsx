@@ -11,6 +11,9 @@ const presetFileMap = {
   'multi-random-array': 'presets/multi-random-array.cpp',
 };
 
+// 获取 API 基础路径，开发环境用 localhost，生产用相对路径
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3001' : '';
+
 function App() {
   // 文件状态
   const [files, setFiles] = useState({ brute: null, prog: null, gen: null });
@@ -81,7 +84,7 @@ function App() {
     if (preset) formData.append('preset', preset);
     formData.append('rounds', rounds);
     try {
-      const resp = await fetch('http://localhost:3001/api/upload', {
+      const resp = await fetch(API_BASE + '/api/upload', {
         method: 'POST',
         body: formData
       });
@@ -104,7 +107,7 @@ function App() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:3001/api/duipai', {
+      const res = await fetch(API_BASE + '/api/duipai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rounds })

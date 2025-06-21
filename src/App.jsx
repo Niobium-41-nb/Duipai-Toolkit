@@ -2,6 +2,8 @@ import About from './About.jsx';
 import Donate from './Donate.jsx';
 import { useState, useEffect } from 'react'
 import MonacoEditor from '@monaco-editor/react'
+import JSZip from 'jszip';
+import * as XLSX from 'xlsx';
 import './App.css'
 
 // 预设与文件名映射
@@ -28,21 +30,31 @@ function App() {
   // 代码编辑器内容
   const [editor, setEditor] = useState({ brute: '', prog: '', gen: '' });
   const [useEditor, setUseEditor] = useState(false);
-  // 预设代码内容缓存
+  // 预设代码内容缓存与加载状态
   const [presetCodes, setPresetCodes] = useState({});
+  const [presetLoading, setPresetLoading] = useState('');
   const [hoverPreset, setHoverPreset] = useState('');
   // 对拍轮数
   const [rounds, setRounds] = useState(10);
   const [showOnlyDiff, setShowOnlyDiff] = useState(false); // 只显示不一致
   const [page, setPage] = useState('main');
+  // 导出对拍结果为 txt 或 zip
+  const [downloadFormat, setDownloadFormat] = useState('txt');
 
-  // 悬停时动态加载对应 cpp 文件内容
+  // 悬停时动态加载对应 cpp 文件内容（只首次 fetch）
   useEffect(() => {
-    if (hoverPreset && presetFileMap[hoverPreset]) {
-      fetch(presetFileMap[hoverPreset] + '?t=' + Date.now()) // 加时间戳防缓存
+    if (hoverPreset && presetFileMap[hoverPreset] && !presetCodes[hoverPreset]) {
+      setPresetLoading(hoverPreset);
+      fetch(presetFileMap[hoverPreset] + '?t=' + Date.now())
         .then(res => res.text())
-        .then(code => setPresetCodes(codes => ({ ...codes, [hoverPreset]: code })))
-        .catch(() => setPresetCodes(codes => ({ ...codes, [hoverPreset]: '// 读取失败' })));
+        .then(code => {
+          setPresetCodes(codes => ({ ...codes, [hoverPreset]: code }));
+          setPresetLoading('');
+        })
+        .catch(() => {
+          setPresetCodes(codes => ({ ...codes, [hoverPreset]: '// 读取失败' }));
+          setPresetLoading('');
+        });
     }
   }, [hoverPreset, presetCodes]);
 
@@ -118,6 +130,88 @@ function App() {
       setError('对拍失败');
     }
     setLoading(false);
+  };
+
+  // 导出对拍结果为 txt、zip、xlsx、json
+  const handleDownloadResults = async () => {
+    if (!results.length) return;
+    const filtered = showOnlyDiff ? results.filter(r => !r.ok) : results;
+    if (downloadFormat === 'txt') {
+      let txt = '输入\t暴力解输出\t测试解输出\t一致\n';
+      filtered.forEach((r, i) => {
+        txt += `【第${i+1}组】\n`;
+        txt += `输入:\n${r.input}\n`;
+        txt += `暴力解输出:\n${r.brute}\n`;
+        txt += `测试解输出:\n${r.prog}\n`;
+        txt += `一致: ${r.ok ? '✔️' : '❌'}\n`;
+        if (r.error) txt += `错误信息: ${r.error}\n`;
+        txt += '\n';
+      });
+      const blob = new Blob([txt], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `duipai-results-${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    } else if (downloadFormat === 'zip') {
+      const zip = new JSZip();
+      filtered.forEach((r, i) => {
+        zip.file(`case${i+1}/data.in`, r.input || '');
+        zip.file(`case${i+1}/data.out1`, r.brute || '');
+        zip.file(`case${i+1}/data.out2`, r.prog || '');
+      });
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `duipai-results-${Date.now()}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    } else if (downloadFormat === 'xlsx') {
+      const wsData = [
+        ['组号', '输入', '暴力解输出', '测试解输出', '一致', '错误信息'],
+        ...filtered.map((r, i) => [
+          i+1, r.input, r.brute, r.prog, r.ok ? '✔️' : '❌', r.error || ''
+        ])
+      ];
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, '对拍结果');
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([wbout], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `duipai-results-${Date.now()}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    } else if (downloadFormat === 'json') {
+      const json = JSON.stringify(filtered, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `duipai-results-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    }
   };
 
   if (page === 'about') {
@@ -211,8 +305,8 @@ function App() {
             <option value="multi-random-array" onMouseEnter={() => setHoverPreset('multi-random-array')}>多组随机数组生成器</option>
           </select>
         </label>
-        {hoverPreset && presetCodes[hoverPreset] && (
-          <pre style={{
+        {hoverPreset && (
+          <div style={{
             position: 'absolute',
             left: 260,
             top: 0,
@@ -224,12 +318,33 @@ function App() {
             padding: 12,
             minWidth: 320,
             maxWidth: 520,
+            maxHeight: 320,
             fontSize: 13,
             fontFamily: 'Fira Mono, Consolas, monospace',
             boxShadow: '0 2px 8px #1677ff22',
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-all',
-          }}>{presetCodes[hoverPreset]}</pre>
+            overflow: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8
+          }}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
+              <span style={{fontWeight:600}}>预设代码预览</span>
+              <button style={{fontSize:12,padding:'2px 8px',cursor:'pointer'}} onClick={() => {
+                if (presetCodes[hoverPreset]) {
+                  navigator.clipboard.writeText(presetCodes[hoverPreset]);
+                }
+              }}>复制</button>
+            </div>
+            <div style={{flex:1,overflow:'auto'}}>
+              {presetLoading === hoverPreset ? (
+                <span style={{color:'#888'}}>Loading...</span>
+              ) : (
+                <pre style={{margin:0}}>{presetCodes[hoverPreset] || ''}</pre>
+              )}
+            </div>
+          </div>
         )}
         <br />
         <button onClick={handleUpload} disabled={loading}>上传并对拍</button>
@@ -237,10 +352,25 @@ function App() {
       </div>
       <div className="result-section">
         <h2>对拍结果</h2>
-        <label style={{ float: 'right', fontSize: 15, fontWeight: 400 }}>
-          <input type="checkbox" checked={showOnlyDiff} onChange={e => setShowOnlyDiff(e.target.checked)} style={{ marginRight: 4 }} />
-          只显示不一致
-        </label>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          <div>
+            <label style={{ fontSize: 15, fontWeight: 400, marginRight: 16 }}>
+              <input type="checkbox" checked={showOnlyDiff} onChange={e => setShowOnlyDiff(e.target.checked)} style={{ marginRight: 4 }} />
+              只显示不一致
+            </label>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <select value={downloadFormat} onChange={e => setDownloadFormat(e.target.value)} style={{ fontSize: 14, marginRight: 4 }}>
+              <option value="txt">导出为 TXT</option>
+              <option value="zip">导出为 data.in/data.out1/data.out2 (ZIP)</option>
+              <option value="xlsx">导出为 Excel (XLSX)</option>
+              <option value="json">导出为 JSON</option>
+            </select>
+            <button onClick={handleDownloadResults} disabled={!results.length} style={{ fontSize: 14 }}>
+              下载对拍结果
+            </button>
+          </div>
+        </div>
         <table>
           <thead>
             <tr>

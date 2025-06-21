@@ -1,0 +1,9 @@
+- docs: 更新README，补充v2.1.0新特性与部署说明
+- feat: 新版本功能优化与导出格式扩展（支持TXT/ZIP/Excel/JSON），本地脚本增强
+- chore: update project except dev-scripts folder
+- chore: update scripts, logs, and uploads; restructure dev scripts folder
+- chore: update
+- chore: 优化批处理自动关闭隐藏窗口等细节
+- docs: 更新 README，补充 v2.0.2 新特性与使用说明
+- docs: 完善关于我们页面，支持头像展示等内容
+- feat: 支持自定义对拍轮数、结果筛选、预设代码动态加载等功能

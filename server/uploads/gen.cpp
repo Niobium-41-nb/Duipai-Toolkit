@@ -9,7 +9,7 @@ int main() {
     int T = rand() % 1 + 1; 
     printf("%d\n",T);                       
     while (T--) {
-        int n = rand() % 100 + 2;    
+        int n = rand() % 10 + 2;    
         printf("%d\n", n);            
         for(int i = 0;i < n;i++){
             int temp = rand() % n + 1;

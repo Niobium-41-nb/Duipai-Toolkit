@@ -2,64 +2,39 @@
 #define int long long
 using namespace std;
 
-void solve(){
-    int n;
-    cin >> n;
-    vector<int>arr(n+1,0);
-    for(int i = 1;i <= n;i++){
-        cin >> arr[i];
-    }
-    vector<set<int>>nums;
-    vector<map<int,int>>times;
-    set<int>st;
-    map<int,int>mp;
-    for(int i = n;i >= 1;i--){
-        int num = arr[i];
-        if(st.empty()){
-            st.insert(num);
-            mp[num]=1;
-        }else{
-            if(st.find(num)!=st.end()){
-                nums.push_back(st);
-                times.push_back(mp);
-                st.clear(),mp.clear();
-                st.insert(num);
-                mp[num]=1;
-            }else{
-                st.insert(num);
-                mp[num]=1;
-            }
-        }
-    }
-    if(!st.empty()){
-        nums.push_back(st);
-        times.push_back(mp);
-    }
-    // for(int i = 0;i < nums.size();i++){
-    //     for(int j : nums[i]){
-    //         cout << j << ' ';
-    //     }
-    //     cout << '\n';
-    // }
-    int cnt = 1;
-    if(nums.size() == 1){
-        cout << 1 << '\n';
-        return;
-    }
-    for(int i = nums.size()-1;i > 0;i--){
-        bool can = true;
-        for(int j : nums[i]){
-            if(nums[i-1].find(j) == nums[i-1].end()){
-                can = false;
-            }
-        }
-        if(can == false){
-            break;
-        }
-        cnt++;
-    }
+typedef pair<int,int> pii;
 
-    cout << cnt << '\n';
+const int N = 2e5+1;
+
+long long binpow(long long a,long long b){
+    long long res = 1;
+    while(b>0){
+        if(b&1)res = res * a;
+        a = a * a;
+        b >>= 1;
+    }
+    return res;
+}
+
+vector<int>pri;
+bool not_prime[N];
+void pre(int n){
+    for(int i = 2;i <= n;i++){
+        if(!not_prime[i]){
+            pri.push_back(i);
+        }
+        for(int pri_j : pri){
+            if(i * pri_j > n)break;
+            not_prime[i*pri_j]=true;
+            if(i%pri_j==0){
+                break;
+            }
+        }
+    }
+}
+
+void solve(){
+
 }
 
 signed main(){
@@ -70,4 +45,5 @@ signed main(){
     while(t--){
         solve();
     }
+    return 0;
 }

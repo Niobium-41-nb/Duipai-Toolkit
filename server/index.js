@@ -121,6 +121,23 @@ app.post('/api/duipai', async (req, res) => {
   res.json({ status: 'success', results });
 });
 
+// 清理对拍残余文件接口
+app.post('/api/cleanup', (req, res) => {
+  const uploadDir = path.join(__dirname, 'uploads');
+  if (!fs.existsSync(uploadDir)) return res.json({ status: 'ok', message: '无残余文件' });
+  const files = fs.readdirSync(uploadDir);
+  let removed = [];
+  for (const file of files) {
+    if (/\.(exe|cpp|in|out|tmp|txt)$/i.test(file)) {
+      try {
+        fs.unlinkSync(path.join(uploadDir, file));
+        removed.push(file);
+      } catch {}
+    }
+  }
+  res.json({ status: 'ok', removed });
+});
+
 const isProd = process.env.NODE_ENV === 'production' || process.env.STATIC_SERVE === '1';
 if (isProd) {
   const distPath = path.join(__dirname, '../dist');

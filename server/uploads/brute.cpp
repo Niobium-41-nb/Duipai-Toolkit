@@ -1,49 +1,89 @@
-#include <bits/stdc++.h>
-#define int long long
+#include<bits/stdc++.h>
 using namespace std;
 
-typedef pair<int,int> pii;
+using u64 = unsigned long long;
+using i64 = long long;
+using u32 = unsigned;
 
-const int N = 2e5+1;
 
-long long binpow(long long a,long long b){
-    long long res = 1;
-    while(b>0){
-        if(b&1)res = res * a;
-        a = a * a;
-        b >>= 1;
+const int mod = 998244353;
+const int N = 3e5 + 5;
+const int M = 3e5 + 5;
+
+void solve(int tc)
+{
+    int n;
+    cin >> n;
+    vector<char> c(n + 1);
+    for(int i = 1; i <= n; i++) {
+        cin >> c[i];
     }
-    return res;
-}
 
-vector<int>pri;
-bool not_prime[N];
-void pre(int n){
-    for(int i = 2;i <= n;i++){
-        if(!not_prime[i]){
-            pri.push_back(i);
+    vector<int> cost(17);
+    for(int i = 0; i < 17; i++) {
+        cin >> cost[i];
+    }
+
+    int len;
+    cin >> len;
+
+    if(len & 1) {
+        len += 1;
+        if(len > n) {
+            return cout << 0 << '\n', void();
         }
-        for(int pri_j : pri){
-            if(i * pri_j > n)break;
-            not_prime[i*pri_j]=true;
-            if(i%pri_j==0){
+    }
+
+    vector<int> ok(1 << 17, 1);
+    for(int i = 1; i + len - 1 <= n; i++) {
+        int state = 0;
+        int sum = i + i + len - 1;
+        for(int j = i; j <= i + len / 2 - 1; j++) {
+            if(c[j] != c[sum - j]) {
+                int mn = min(c[j] - 'a', c[sum - j] - 'a');
+                state |= 1 << mn;
+            } else {
+                state = 0;
                 break;
             }
         }
+        if(state) ok[state] = 0;
     }
+
+    for(int d = 0; d < 17; d++) {
+        for(int s = 0; s < 1 << 17; s++) {
+            if(s & 1 << d) {
+                ok[s] &= ok[s ^ 1 << d];
+            }
+        }
+    }
+
+    int ans = 1e9;
+    for(int s = 0; s < 1 << 17; s++) {
+        if(ok[s]) {
+            int sum = 0;
+            for(int i = 0; i < 17; i++) {
+                if(!(s >> i & 1)) {
+                    sum += cost[i];
+                }
+            }
+            ans = min(ans, sum);
+        }
+    }
+
+    cout << ans << '\n';
 }
 
-void solve(){
+signed main()
+{
+    ios::sync_with_stdio(0), cin.tie(0), cout.tie(0);
 
-}
+    int T = 1;
+    cin >> T;
 
-signed main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0),cout.tie(0);
-    int t = 1;
-    cin >> t;
-    while(t--){
-        solve();
+    for(int tc = 1; tc <= T; tc++) {
+       solve(tc);
     }
+
     return 0;
 }
